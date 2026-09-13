@@ -1,0 +1,48 @@
+schema_version: 1
+
+# The architect replaces the values below when dispatching work.
+task:
+  id: UNASSIGNED
+  status: awaiting_dispatch
+  title: No active worker task
+  objective: >-
+    Wait for the architect to define a bounded implementation task.
+  base_commit: null
+
+scope:
+  allowed_files: []
+  forbidden_files:
+    - "**/*"
+  dependencies:
+    additions_allowed: false
+    allowed: []
+  schema_changes_allowed: false
+  unrelated_refactors_allowed: false
+
+contracts:
+  inputs: []
+  outputs: []
+  invariants:
+    - Do not modify the repository while this task is awaiting dispatch.
+
+acceptance_criteria: []
+
+checks: []
+
+stop_if:
+  - The task status is not ready.
+  - The base commit is missing.
+  - Required work falls outside allowed_files.
+  - A dependency or schema change appears necessary but is not allowed.
+  - Existing architecture contradicts the task.
+
+worker_instructions:
+  branch_pattern: "worker/<task-id>"
+  result_file: .ai/RESULT.yaml
+  rules:
+    - Implement only this task.
+    - Do not edit files outside allowed_files.
+    - Do not add dependencies unless explicitly allowed.
+    - Stop and report uncertainty instead of guessing.
+    - Record each check command, exit code, and concise summary.
+    - Disclose every deviation, risk, and unresolved question.
